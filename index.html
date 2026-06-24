@@ -964,5 +964,79 @@
       rows.forEach(function (r) { io.observe(r); });
     })();
   </script>
+
+  <script>
+  /* ---- live tour board from the PUBLIC site sheet (public columns only; fees never present) ----
+     Source sheet mirrors the booking table via QUERY+IMPORTRANGE and exposes only
+     artist/date/venue/city/night/ticket. The static <li> above are the offline fallback. */
+  (function () {
+    var SHEET_ID = '1ySrsk_ema0TIvWc2-hekgY93RsEr1E8G9BIu5c8f6Ac';
+    var GID = '0';
+    var URLMAP = {"27.06.2026": "https://novosibirsk.qtickets.events/236592-scally-milano", "03.07.2026": "https://afisha.yandex.ru/ulyanovsk/concert/scally-milano-tour", "04.07.2026": "https://kazan.qtickets.events/234676-scally-milano-4-iyulya", "05.07.2026": "https://ticket4me.ru/nizhnekamsk/afisha/scally-milano-440593", "21.07.2026": "https://ticketscloud.com/v1/widgets/common?token=eyJhbGciOiJIUzI1NiIsImlzcyI6InRpY2tldHNjbG91ZC5ydSIsInR5cCI6IkpXVCJ9.eyJwIjoiNjQ4YWNmMjE2ZWZmMmYyOGEwOWFlOWI5In0.dXXh5P3BsZ2BLw6dI96WIwd-Lw-xK2q2-zU-Ndfxu_w&event=69f38faf07a42e2847338bb1&s=1&r=1&org=648acf216eff2f28a09ae9b9&city=491422&category=592841f8515e35002dead938&tags=592841f8515e35002dead94a%2C%D0%A0%D1%8D%D0%BF%2F%D0%A5%D0%B8%D0%BF-%D1%85%D0%BE%D0%BF&lang=ru", "23.07.2026": "https://ticketscloud.com/v1/widgets/common?token=eyJhbGciOiJIUzI1NiIsImlzcyI6InRpY2tldHNjbG91ZC5ydSIsInR5cCI6IkpXVCJ9.eyJwIjoiNjQ4YWNmMjE2ZWZmMmYyOGEwOWFlOWI5In0.dXXh5P3BsZ2BLw6dI96WIwd-Lw-xK2q2-zU-Ndfxu_w&event=6a1815f4dd24798c15a62197&s=1&r=1&org=648acf216eff2f28a09ae9b9&city=518255&category=592841f8515e35002dead938&tags=592841f8515e35002dead94a%2C%D0%A0%D1%8D%D0%BF%2F%D0%A5%D0%B8%D0%BF-%D1%85%D0%BE%D0%BF&lang=ru", "24.07.2026": "https://ticketscloud.com/v1/widgets/common?token=eyJhbGciOiJIUzI1NiIsImlzcyI6InRpY2tldHNjbG91ZC5ydSIsInR5cCI6IkpXVCJ9.eyJwIjoiNjQ4YWNmMjE2ZWZmMmYyOGEwOWFlOWI5In0.dXXh5P3BsZ2BLw6dI96WIwd-Lw-xK2q2-zU-Ndfxu_w&event=6a1815f4dd24798c15a62197&s=1&r=1&org=648acf216eff2f28a09ae9b9&city=518255&category=592841f8515e35002dead938&tags=592841f8515e35002dead94a%2C%D0%A0%D1%8D%D0%BF%2F%D0%A5%D0%B8%D0%BF-%D1%85%D0%BE%D0%BF&lang=ru", "25.07.2026": "https://ticketscloud.com/v1/widgets/common?token=eyJhbGciOiJIUzI1NiIsImlzcyI6InRpY2tldHNjbG91ZC5ydSIsInR5cCI6IkpXVCJ9.eyJwIjoiNjQ4YWNmMjE2ZWZmMmYyOGEwOWFlOWI5In0.dXXh5P3BsZ2BLw6dI96WIwd-Lw-xK2q2-zU-Ndfxu_w&event=69f393c5e1e126d1ed8bd4ac&s=1&r=1&org=648acf216eff2f28a09ae9b9&city=542420&category=592841f8515e35002dead938&tags=592841f8515e35002dead94a%2C%D0%A0%D1%8D%D0%BF%2F%D0%A5%D0%B8%D0%BF-%D1%85%D0%BE%D0%BF&lang=ru", "27.07.2026": "https://ticketscloud.com/v1/widgets/common?token=eyJhbGciOiJIUzI1NiIsImlzcyI6InRpY2tldHNjbG91ZC5ydSIsInR5cCI6IkpXVCJ9.eyJwIjoiNjQ4YWNmMjE2ZWZmMmYyOGEwOWFlOWI5In0.dXXh5P3BsZ2BLw6dI96WIwd-Lw-xK2q2-zU-Ndfxu_w&event=69f3950d1daab78bfcf81e50&s=1&r=1&org=648acf216eff2f28a09ae9b9&city=693805&category=592841f8515e35002dead938&tags=592841f8515e35002dead94a%2C%D0%A0%D1%8D%D0%BF%2F%D0%A5%D0%B8%D0%BF-%D1%85%D0%BE%D0%BF&lang=ru", "31.07.2026": "https://kirov.qtickets.events/233801-scally-milano-x-summer-season-31-iyulya"};
+
+    function pad(n){ return (n<10?'0':'')+n; }
+    function parseDate(s){
+      var m=(s||'').trim().match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/);
+      if(!m) return null;
+      var d=new Date(+m[3], +m[2]-1, +m[1]);
+      if(d.getFullYear()!=+m[3]||d.getMonth()!=+m[2]-1||d.getDate()!=+m[1]) return null;
+      return d;
+    }
+    function fmt(d){ return pad(d.getDate())+'.'+pad(d.getMonth()+1)+'.'+d.getFullYear(); }
+    function esc(s){ return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+    function plural(n){ var a=n%10,b=n%100; if(a===1&&b!==11) return 'дата'; if(a>=2&&a<=4&&(b<12||b>14)) return 'даты'; return 'дат'; }
+    function ticketUrl(date, sheetVal){ if(sheetVal && /^https?:\/\//i.test(sheetVal)) return sheetVal; return URLMAP[date] || ''; }
+
+    function rowHtml(e, isNext){
+      var url=ticketUrl(e.date, e.url);
+      var flag=isNext?'<span class="gig__flag">ближайший</span>':'';
+      var action=url
+        ? '<a class="ticket" href="'+esc(url)+'" target="_blank" rel="noopener noreferrer" aria-label="Купить билет: '+esc(e.city)+', '+esc(e.venue)+', '+esc(e.date)+'"><span class="ticket__fill" aria-hidden="true"></span><span class="ticket__label">купить билет</span><span class="ticket__arrow" aria-hidden="true">&rarr;</span></a>'
+        : '<span class="tba">tba</span>';
+      return '<li class="gig'+(isNext?' gig--next':'')+' reveal is-in">'+
+        '<div class="gig__inner">'+
+          '<span class="gig__date">'+esc(e.date)+'</span>'+
+          '<div class="gig__main"><h3 class="gig__city">'+esc(e.city)+flag+'</h3>'+
+          '<p class="gig__venue">'+esc(e.venue)+'</p></div>'+
+          '<div class="gig__action">'+action+'</div>'+
+        '</div></li>';
+    }
+    function render(entries){
+      var list=document.querySelector('.board__list'), count=document.querySelector('.board__count');
+      if(!list||!entries.length) return;
+      var html=''; for(var i=0;i<entries.length;i++) html+=rowHtml(entries[i], i===0);
+      list.innerHTML=html;
+      if(count) count.textContent=entries.length+' '+plural(entries.length);
+    }
+    function parseCSV(text){
+      var rows=[],row=[],f='',i=0,q=false,c;
+      while(i<text.length){ c=text[i];
+        if(q){ if(c=='"'){ if(text[i+1]=='"'){f+='"';i+=2;continue;} q=false;i++;continue;} f+=c;i++;continue; }
+        if(c=='"'){q=true;i++;continue;}
+        if(c==','){row.push(f);f='';i++;continue;}
+        if(c=='\n'){row.push(f);rows.push(row);row=[];f='';i++;continue;}
+        if(c=='\r'){i++;continue;}
+        f+=c;i++;
+      }
+      if(f.length||row.length){row.push(f);rows.push(row);}
+      return rows;
+    }
+    function load(){
+      var url='https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:csv&gid='+GID;
+      fetch(url,{cache:'no-store'}).then(function(r){ if(!r.ok) throw 0; return r.text(); }).then(function(text){
+        var rows=parseCSV(text), today=new Date(); today.setHours(0,0,0,0);
+        var out=[];
+        for(var r=1;r<rows.length;r++){ var c=rows[r]; if(!c) continue;
+          var d=parseDate(c[1]), city=(c[3]||'').trim();
+          if(!d||!city||d<today) continue;
+          out.push({_d:d, date:fmt(d), venue:(c[2]||'').trim(), city:city, night:(c[4]||'').trim(), url:(c[5]||'').trim()});
+        }
+        out.sort(function(a,b){ return a._d-b._d; });
+        if(out.length) render(out);
+      }).catch(function(){ /* offline / Google down -> keep the static snapshot */ });
+    }
+    if(document.readyState!=='loading') load(); else document.addEventListener('DOMContentLoaded', load);
+  })();
+  </script>
 </body>
 </html>
