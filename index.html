@@ -1012,9 +1012,10 @@
         var rows=parseCSV(text), today=new Date(); today.setHours(0,0,0,0);
         var out=[];
         for(var r=1;r<rows.length;r++){ var c=rows[r]; if(!c) continue;
-          var d=parseDate(c[1]), city=(c[3]||'').trim();
+          var d=parseDate(c[1]), city=(c[3]||'').trim(), venue=(c[2]||'').trim();
+          if(c[1].trim()==='19.10.2026'&&venue.toLowerCase()==='mini'&&city.toLowerCase()==='mini') city='Тула';
           if(!d||!city||d<today||city.toLowerCase()==='киров') continue;
-          out.push({_d:d, date:fmt(d), venue:(c[2]||'').trim(), city:city, night:(c[4]||'').trim(), url:(c[5]||'').trim()});
+          out.push({_d:d, date:fmt(d), venue:venue, city:city, night:(c[4]||'').trim(), url:(c[5]||'').trim()});
         }
         out.sort(function(a,b){ return a._d-b._d; });
         if(out.length) render(out);
