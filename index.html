@@ -1026,7 +1026,7 @@
           var date=(c[1]||'').trim(), d=parseDate(date), city=(c[3]||'').trim(), venue=(c[2]||'').trim(), url=(c[5]||'').trim(), euro=EURO_TOUR[date];
           if(date==='19.10.2026'&&venue.toLowerCase()==='mini'&&city.toLowerCase()==='mini') city='Тула';
           if(euro){ city=euro.city; venue=euro.venue; url=euro.url; }
-          if(!d||!city||d<today||['киров','липецк'].includes(city.toLowerCase())) continue;
+          if(!d||!city||d<today||['киров','липецк','краснодар'].includes(city.toLowerCase())) continue;
           out.push({_d:d, date:fmt(d), venue:venue, city:city, night:(c[4]||'').trim(), url:url});
         }
         out.sort(function(a,b){ return a._d-b._d; });
