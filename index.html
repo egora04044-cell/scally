@@ -1024,6 +1024,9 @@
         for(var r=1;r<rows.length;r++){ var c=rows[r]; if(!c) continue;
           var date=(c[1]||'').trim(), d=parseDate(date), city=(c[3]||'').trim(), venue=(c[2]||'').trim(), url=(c[5]||'').trim(), euro=EURO_TOUR[date];
           if(date==='19.10.2026'&&venue.toLowerCase()==='mini'&&city.toLowerCase()==='mini') city='Тула';
+          if(date==='27.11.2026'&&city.toLowerCase()==='липецк'){
+            url='https://ticketscloud.com/v1/widgets/common?token=eyJhbGciOiJIUzI1NiIsImlzcyI6InRpY2tldHNjbG91ZC5ydSIsInR5cCI6IkpXVCJ9.eyJwIjoiNjdlNTBlNjU2ODY1MWI5NjFhYjIwZGViIn0.61vEmILxRo96kEO5ttPJuL9X6R8O8SY9M1Im7_o55Dc&event=6ab5704a36ec8fb68d524503&s=1&r=1&org=67e50e6568651b961ab20deb&city=535121&category=592841f8515e35002dead938&tags=592841f8515e35002dead94a%2C%D0%A0%D1%8D%D0%BF%2F%D0%A5%D0%B8%D0%BF-%D0%A5%D0%BE%D0%BF&lang=ru';
+          }
           if(euro){
             if(euro.date){ date=euro.date; d=parseDate(date); }
             city=euro.city; venue=euro.venue; url=euro.url;
