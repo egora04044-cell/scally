@@ -1028,7 +1028,7 @@
             if(euro.date){ date=euro.date; d=parseDate(date); }
             city=euro.city; venue=euro.venue; url=euro.url;
           }
-          if(!d||!city||d<today||['киров','липецк','краснодар','tbilisi','тбилиси'].includes(city.toLowerCase())) continue;
+          if(!d||!city||d<today||['киров','краснодар','tbilisi','тбилиси'].includes(city.toLowerCase())) continue;
           out.push({_d:d, date:fmt(d), venue:venue, city:city, night:(c[4]||'').trim(), url:url});
         }
         out.sort(function(a,b){ return a._d-b._d; });
