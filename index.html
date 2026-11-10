@@ -968,6 +968,10 @@
       "18.12.2026": {date:"19.12.2026", city:"Belgrade", venue:"Zappa Baza", url:"https://shop.weeztix.com/63b52c84-a41e-4529-a904-7bdd38384a0c"},
       "26.12.2026": {city:"Yerevan", venue:"EventHub", url:"https://show4me.com/events/scally-milano-live-in-yerevan"}
     };
+    /* Confirmed events that are not yet present in the public Sheet. */
+    var EXTRA_EVENTS = [
+      {date:"13.12.2026", city:"Barcelona", venue:"Sala Mambo Jambo", url:"https://shop.weeztix.com/fe32e583-913e-4934-b650-7a58500b2f84"}
+    ];
 
     function pad(n){ return (n<10?'0':'')+n; }
     function parseDate(s){
@@ -1033,6 +1037,12 @@
           }
           if(!d||!city||d<today||['киров','краснодар','tbilisi','тбилиси'].includes(city.toLowerCase())) continue;
           out.push({_d:d, date:fmt(d), venue:venue, city:city, night:(c[4]||'').trim(), url:url});
+        }
+        for(var x=0;x<EXTRA_EVENTS.length;x++){
+          var extra=EXTRA_EVENTS[x], extraDate=parseDate(extra.date);
+          if(!extraDate||extraDate<today) continue;
+          var duplicate=out.some(function(e){ return e.date===extra.date&&e.city.toLowerCase()===extra.city.toLowerCase(); });
+          if(!duplicate) out.push({_d:extraDate, date:extra.date, venue:extra.venue, city:extra.city, night:'', url:extra.url});
         }
         out.sort(function(a,b){ return a._d-b._d; });
         if(out.length) render(out);
